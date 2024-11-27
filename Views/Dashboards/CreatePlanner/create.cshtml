@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Car Production Planner - Create Plan";
+}
+@model AspnetCoreMvcFull.ModelDtos.CreatePlannerDto
+@section PageScripts {
+    <script src="~/js/form-basic-inputs.js"></script>
+}
+@* ************** Content ************** *@
+
+<div class="row">
+    <div class="col-xl-12">
+        <form asp-action="SubmitPlanner" asp-controller="Dashboards" method="post">
+            @Html.AntiForgeryToken()
+            <div class="card mb-6">
+                <h5 class="card-header">Create Planner</h5>
+                <div class="card-body">
+                    <div class="mb-4 row">
+                        <label for="CreatedBy" class="col-md-2 col-form-label">Created By</label>
+                        <div class="col-md-10">
+                            <input asp-for="CreatedBy" value="Asep" class="form-control" id="CreatedBy" />
+                            <span asp-validation-for="CreatedBy" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-4 row">
+                        <label for="Email" class="col-md-2 col-form-label">Email</label>
+                        <div class="col-md-10">
+                            <input asp-for="Email" value="Asep@gmail.com" class="form-control" type="email" id="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-4 row">
+                        <label for="Description" class="col-md-2 col-form-label">Description</label>
+                        <div class="col-md-10">
+                            <input asp-for="Description" class="form-control" id="Description" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-4 row">
+                        <label for="Week" class="col-md-2 col-form-label">Week</label>
+                        <div class="col-md-10">
+                            <input asp-for="Week" class="form-control" type="week" id="Week" />
+                            <span asp-validation-for="Week" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @{
+                      var i = 0;
+                    }
+                    @foreach (var day in Model.Days)
+                    {
+                        @* @Html.HiddenFor(m => m.PlannerDetailsDto[i].DayId) *@
+                        <input type="hidden" asp-for="PlannerDetailsDto[i].DayId" value="@day.Id" />
+                        <div class="mb-4 row">
+                            <label for="ProductionTotal_@(i)" class="col-md-2 col-form-label">@day.Name</label>
+                            <div class="col-md-10">
+                                <input asp-for="PlannerDetailsDto[i].ProductionTotal" class="form-control" placeholder="Production Total" id="ProductionTotal_@(i)" />
+                                <span asp-validation-for="PlannerDetailsDto[i].ProductionTotal" class="text-danger"></span>
+                            </div>
+                        </div>
+                        i++;
+                    }
+                </div>
+                <div class="d-flex justify-content-start card-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"] = "Car Production Planner - Detail Plan";
+}
+@model AspnetCoreMvcFull.ViewModels.PlannerDetailViewModel
+@section PageScripts {
+    <script src="~/js/form-basic-inputs.js"></script>
+}
+@* ************** Content ************** *@
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card mb-6">
+            <h5 class="card-header">Detail Planner</h5>
+            <div class="card-body">
+                <div class="mb-4 row">
+                    <label for="CreatedBy" class="col-md-2 col-form-label">Created By</label>
+                    <div class="col-md-10">
+                        <input readonly value="@(Model.CreatedBy)" class="form-control" id="CreatedBy" />
+                    </div>
+                </div>
+                <div class="mb-4 row">
+                    <label for="Email" class="col-md-2 col-form-label">Email</label>
+                    <div class="col-md-10">
+                        <input readonly value="@(Model.Email)" class="form-control" type="email" id="Email" />
+                    </div>
+                </div>
+                <div class="mb-4 row">
+                    <label for="Description" class="col-md-2 col-form-label">Description</label>
+                    <div class="col-md-10">
+                        <input readonly value="@(Model.Description)" class="form-control" id="Description" />
+                    </div>
+                </div>
+                <div class="mb-4 row">
+                    <label for="Week" class="col-md-2 col-form-label">Week</label>
+                    <div class="col-md-10">
+                        <input readonly value="@(Model.Week)" class="form-control" type="week" id="Week" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between card-footer">
+                    <h5>Planner Details</h5>
+                    <a class="btn btn-primary" href="@Url.Action("DetailPlanner", "Dashboards", new { id = Model.Id, isPlanned = true })">Set Plan</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            @foreach (var day in Model.Days)
+                            {
+                                <th>@day.Name</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Production Total</td>
+                            @foreach (var day in Model.Days)
+                            {
+                                <td>
+                                    @foreach (var detail in Model.PlannerDetails)
+                                    {
+                                        @if (detail.DayId == day.Id)
+                                        {
+                                            @detail.ProductionTotal
+                                        }
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end card-footer">
+                    @if (Model.isPlanned)
+                    {
+                        <form asp-action="SavePlannerDetail" asp-controller="Dashboards" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <button type="submit" class="btn btn-primary">Save Plan</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
